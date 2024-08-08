@@ -11,8 +11,10 @@ jobs:
     name: "Build and Push"
     runs-on: ubuntu-latest
     strategy:
-        matrix:
-          node: [ 16, 18, 20]
+      matrix:
+        node: [ 16, 18, 20]
+      fail-fast: false
+    
     defaults:
       run:
         working-directory: ./api
