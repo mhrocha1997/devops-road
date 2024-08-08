@@ -46,6 +46,7 @@ jobs:
     - name: Build and Push
       uses: docker/build-push-action@v5
       with:
+        context: ./api
         push:  true
         tags: ${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:${{steps.generate_tag.outputs.sha}},${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:latest
 
