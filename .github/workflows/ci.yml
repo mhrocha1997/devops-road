@@ -13,12 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - run: ls
     - name: Setup Node
       uses: actions/setup-node@v4
       with: 
         node-version: 18
         cache: 'yarn'
+        cache-dependency-path: '**/yarn.lock'
     - run: yarn
     - run: yarn run test
 
