@@ -36,8 +36,6 @@ jobs:
         SHA=$(echo $GITHUB_SHA | head -c7)
         echo "sha=$SHA" >> $GITHUB_OUTPUT
 
-    - name: Build docker image
-      run: docker build -t ${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:${{steps.generate_tag.outputs.sha}} .
     
     - name: Docker Login
       uses: docker/login-action@v3.3.0
@@ -45,6 +43,16 @@ jobs:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
-    - name: Push image
-      run: docker push ${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:${{steps.generate_tag.outputs.sha}}
+    - name: Build and Push
+      uses: docker/build-push-action@v5
+      with:
+        push:  true
+        tags: ${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:${{steps.generate_tag.outputs.sha}},${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:latest
+
+
+
+    # - name: Build docker image
+    #   run: docker build -t ${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:${{steps.generate_tag.outputs.sha}} .
+    # - name: Push image
+    #   run: docker push ${{secrets.DOCKERHUB_USERNAME}}/api-template-nest:${{steps.generate_tag.outputs.sha}}
   
