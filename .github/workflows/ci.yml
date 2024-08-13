@@ -59,11 +59,14 @@ jobs:
       run: |
         docker build -t $REGISTRY/api-template-nest:$IMAGE_TAG .
         docker push $REGISTRY/api-template-nest:$IMAGE_TAG
+        docker tag $REGISTRY/api-template-nest:$IMAGE_TAG $REGISTRY/api-template-nest:latest
+        docker push $REGISTRY/api-template-nest:latest
         IMAGE=$(echo $REGISTRY/api-template-nest:$IMAGE_TAG)
         echo "image=$IMAGE" >> $GITHUB_OUTPUT
     
 
     - name: Deploy to AppRunner
+      id: deploy-apprunner
       uses: awslabs/amazon-app-runner-deploy@main
       with:
         service: api-template-nest
@@ -73,6 +76,11 @@ jobs:
         cpu: 1
         memory: 2
         port: 3000
+        wait-for-service-stability-seconds: 180
+
+    - name: App Runner check
+      run: echo "App Runner Running ..." ${{steps.deploy-apprunner.outputs.service-url}}
+
 
     # - name: Docker Login
     #   uses: docker/login-action@v3.3.0
