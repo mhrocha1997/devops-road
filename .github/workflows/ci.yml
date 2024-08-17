@@ -33,6 +33,12 @@ jobs:
         cache-dependency-path: './api/yarn.lock'
     - run: yarn
     - run: yarn run test
+    
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
     - name: Generate tag
       id: generate_tag
