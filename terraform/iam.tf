@@ -100,3 +100,35 @@ resource "aws_iam_role" "apprunner-role" {
     IAC = "true"
   }
 }
+
+
+resource "aws_iam_role" "tf-role" {
+  name = "tf-role"
+
+  assume_role_policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Effect : "Allow",
+        Action : "sts:AssumeRoleWithWebIdentity",
+        Principal : {
+          Federated : var.oidc.federated_arn
+        },
+        Condition : {
+          StringEquals : {
+            "${var.oidc.audience_key}" : var.oidc.audience,
+            "${var.oidc.subject_key}" : var.oidc.subject
+          }
+        }
+      }
+    ]
+  })
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  ]
+
+  tags = {
+    IAC = "true"
+  }
+}
