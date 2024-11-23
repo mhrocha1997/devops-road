@@ -4,7 +4,7 @@ metadata:
   name: app-ts
   namespace: apps
 spec:
-  replicas: 3
+  replicas: 5
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: app-ts
-          image: mhrocha1997/api-template-nest:v7
+          image: mhrocha1997/api-template-nest:v10
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -36,6 +36,33 @@ spec:
                 name: app-ts-configmap
             - secretRef:
                 name: app-ts-secrets
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 3000
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 1
+            periodSeconds: 15
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 3000
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            initialDelaySeconds: 10
           # env:
           #   - name: APP
           #     valueFrom:
