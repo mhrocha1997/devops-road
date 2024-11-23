@@ -12,13 +12,13 @@ export class AppService {
     return "I'm on K8S!!!";
   }
 
-  writeFile(): null {
+  writeFile(): string {
     const file = createWriteStream('teste.txt');
 
     for (let x = 0; x <= 10000; x++) {
       file.write('Writing...\n');
     }
     file.end();
-    return;
+    return 'File Written';
   }
 }

@@ -16,7 +16,7 @@ export class AppController {
   }
 
   @Get('/write-file')
-  writeFile(): null {
+  writeFile(): string {
     return this.appService.writeFile();
   }
 }
