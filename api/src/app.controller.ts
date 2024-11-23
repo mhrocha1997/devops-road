@@ -14,4 +14,9 @@ export class AppController {
   getExample(): string {
     return this.appService.getExample();
   }
+
+  @Get('/write-file')
+  writeFile(): null {
+    return this.appService.writeFile();
+  }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { createWriteStream } from 'fs';
 
 @Injectable()
 export class AppService {
@@ -9,5 +10,15 @@ export class AppService {
   }
   getExample(): string {
     return "I'm on K8S!!!";
+  }
+
+  writeFile(): null {
+    const file = createWriteStream('teste.txt');
+
+    for (let x = 0; x <= 10000; x++) {
+      file.write('Writing...\n');
+    }
+    file.end();
+    return;
   }
 }
