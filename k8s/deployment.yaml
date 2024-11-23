@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-ts
+  namespace: apps
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: app-ts
+  template:
+    metadata:
+      labels:
+        app: app-ts
+    spec:
+      containers:
+        - name: app-ts
+          image: mhrocha1997/api-template-nest:v5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          envFrom:
+            - configMapRef:
+                name: app-ts-configmap
+            - secretRef:
+                name: app-ts-secrets
+          # env:
+          #   - name: APP
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         key: APP
+          #         name: app-ts-configmap
+          #   - name: API_KEY
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: app-ts-secrets
+          #         key: api-key
+            
