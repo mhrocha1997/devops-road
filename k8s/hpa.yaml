@@ -8,18 +8,42 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: app-ts
-  minReplicas: 1
-  maxReplicas: 10
+  minReplicas: 3
+  maxReplicas: 15
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 75
+        averageUtilization: 70
   - type: Resource
     resource:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 75
+        averageUtilization: 70
+
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 30
+      policies:
+        ## Scale down 2 pods each 15 seconds
+        - type: Pods
+          value: 2
+          periodSeconds: 15
+        ## Scale down 20% pods each 15 seconds
+        - type: Percent
+          value: 20
+          periodSeconds: 15
+    ## select policy that will scale down the least number of pods
+      selectPolicy: Min
+    scaleUp:
+      ## Wait 0 seconds after condition detection
+      stabilizationWindowSeconds: 0
+      policies:
+        # Scale up 2 pods each 3 seconds
+        - type: Pods
+          value: 2
+          periodSeconds: 3
+        ## If using percent type, the 100% will be the maxReplicas number

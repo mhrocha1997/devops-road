@@ -4,7 +4,7 @@ metadata:
   name: app-ts
   namespace: apps
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,16 +20,16 @@ spec:
     spec:
       containers:
         - name: app-ts
-          image: mhrocha1997/api-template-nest:v5
+          image: mhrocha1997/api-template-nest:v7
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           resources:
             requests:
-              cpu: 100m
+              cpu: 400m
               memory: 128Mi
             limits:
-              cpu: 200m
+              cpu: 700m
               memory: 256Mi
           envFrom:
             - configMapRef:
@@ -47,4 +47,3 @@ spec:
           #       secretKeyRef:
           #         name: app-ts-secrets
           #         key: api-key
-            
