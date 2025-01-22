@@ -1,5 +1,5 @@
 [WIP]
-# DevOps Formation
+# DevOps Road
 
 The main goal of this repository is to serve as a lab for learning DevOps Engineering, and a knowledge/experience compendium.
 
