@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  labels:
+    app: kafka-consumer
+  namespace: apis-hmg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      containers:
+      - name: kafka-consumer
+        image: mhrocha1997/kafka-consumer:latest
+        ports:
+        - containerPort: 8080
+        env:
+          - name: KAFKA_BROKER_LIST
+            value: localhost-1:9092,localhost-2:9092,localhost-3:9092
+          - name: TOPIC_NAME
+            value: test-hpa-topic
+          - name: GROUP_ID
+            value: consumer-group-test
+        resources:
+          requests:
+            cpu: 300m
+            memory: 400Mi
+          limits:
+            cpu: 600m
+            memory: 800Mi

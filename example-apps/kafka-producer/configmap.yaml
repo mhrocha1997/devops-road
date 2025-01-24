@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-producer-script
+data:
+  producer.py: |
+    from kafka import KafkaProducer
+    import json
+
+    producer = KafkaProducer(
+        bootstrap_servers=['localhost-1:9092,localhost-2:9092,localhost-3:9092'],
+        value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    )
+
+    for i in range(0,200):
+      producer.send('test-hpa-topic', {'key': 'value', 'message': "test"})
+
+    producer.flush()
+
+    print("Messages sent")

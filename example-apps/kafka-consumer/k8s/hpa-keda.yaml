@@ -1,0 +1,43 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: kafka-consumer
+  namespace: apis-hmg
+spec:
+  scaleTargetRef:
+    name: kafka-consumer
+  pollingInterval: 5
+  minReplicaCount: 3
+  maxReplicaCount: 60
+
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:                              
+        scaleDown:
+          stabilizationWindowSeconds: 30
+          policies:
+          - type: Percent
+            value: 20
+            periodSeconds: 60
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Pods
+            value: 10
+            periodSeconds: 60
+
+  triggers:
+  # - type: kafka
+  #   metadata:
+  #     bootstrapServers: localhost-1:9092,localhost-2:9092,localhost-3:9092
+  #     consumerGroup: consumer-group-test
+  #     topic: test-hpa-topic
+  #     lagThreshold: "5"
+  #     offsetResetPolicy: latest
+  #     activationLagThreshold: "5"
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-prometheus.monitoring:9090
+      metricName: kafka_consumergroup_lag
+      threshold: '10'
+      query: sum(kafka_consumergroup_lag{topic="test-hpa-topic", consumergroup="consumer-group-test"})

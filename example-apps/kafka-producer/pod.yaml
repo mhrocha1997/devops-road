@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-producer-pod
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: kafka-producer-container
+    image: python:3.9-slim
+    command:
+      - /bin/sh
+      - -c
+      - |
+        pip install kafka-python && python /scripts/producer.py && exit 0
+    volumeMounts:
+    - name: script-volume
+      mountPath: /scripts
+  volumes:
+  - name: script-volume
+    configMap:
+      name: kafka-producer-script
