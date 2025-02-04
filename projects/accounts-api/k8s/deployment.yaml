@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-api
+  namespace: accounts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts-api
+  template:
+    metadata:
+      labels:
+        app: accounts-api
+    spec:
+      containers:
+      - name: accounts
+        image: mhrocha1997/accounts-api:v0.1.0
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8080
+        envFrom:
+          - secretRef:
+              name: accounts-api-secrets

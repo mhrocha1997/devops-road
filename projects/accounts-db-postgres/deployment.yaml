@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-db
+  namespace: accounts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts-db
+  template:
+    metadata:
+      labels:
+        app: accounts-db
+    spec:
+      containers:
+        - name: accounts-db
+          image: 'postgres:15'
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          envFrom:
+            - secretRef:
+                name: accounts-db-secrets
+          ports:
+          - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: dbdata
+      volumes:
+        - name: dbdata
+          persistentVolumeClaim:
+            claimName: accounts-db-pvc
